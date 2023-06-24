@@ -1,22 +1,24 @@
 import { View, Text, Alert, Button, StyleSheet, ScrollView, Image, TouchableOpacity, BackHandler } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import AppView from '~/app/core/component/AppView';
 import { CompositeNavigationProp, useFocusEffect } from '@react-navigation/native';
 import ScannerScreens from '../../scanner/config/Screens';
 import { MaterialIcons } from '@expo/vector-icons'; 
+import { AuthContext } from '~/app/core/config/AuthContext';
 
 export default function Home({ navigation }: { navigation: CompositeNavigationProp<any, any> }) {
+  const { setIsLogin } = useContext(AuthContext);
 
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
         Alert.alert(
-          "Whyyy",
-          "You sure to exit this app??",
+          "Logout",
+          "You sure to logout??",
           [
             {
-              text: "Exit App",
-              onPress: () => BackHandler.exitApp(),
+              text: "Logout",
+              onPress: () => setIsLogin(false),
               style: "default",
             },
           ],
@@ -35,33 +37,10 @@ export default function Home({ navigation }: { navigation: CompositeNavigationPr
 
   return (
     <AppView withSafeArea 
-    // style={{ backgroundColor: '#0d0d0d' }}
     >
-      {/* <ScrollView
-        showsVerticalScrollIndicator={false}> */}
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginHorizontal: 15, marginTop: 10 }}>
-        <TouchableOpacity onPress={() => ScannerScreens.HISTORY.navigate(navigation)}>
-          <MaterialIcons name="history" size={28} color="black" />
-        </TouchableOpacity>
-      </View>
       <View style={styles.container}>
-        <View style={styles.headerView}>
-          <Text style={styles.topHeaderText}>
-            Scan QR Code
-          </Text>
-          <Text style={styles.topContentText}>
-            To scan your QR can tap on the bottom button.
-            {'\n'}Try it out!
-          </Text>
+        <Text>Home</Text>
         </View>
-        <Image style={styles.logo} source={ require('~/assets/qr-scan.png') }/>
-        <TouchableOpacity style={styles.button} onPress={ () => ScannerScreens.SCANNER.navigate(navigation)}>
-          <Text style={styles.buttonText}>
-            Scan
-          </Text>
-        </TouchableOpacity>
-        {/* </ScrollView> */}
-      </View>
     </AppView>
   )
 }

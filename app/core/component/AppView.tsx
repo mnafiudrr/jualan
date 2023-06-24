@@ -1,5 +1,5 @@
 import React from 'react';
-import {ViewStyle, StatusBar, ScrollView} from 'react-native';
+import {ViewStyle, StatusBar, ScrollView, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import ToggleableSafeArea from './ToggleSafeArea';
 
 export default function AppView({
