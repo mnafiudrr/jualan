@@ -8,6 +8,7 @@ import { SplashContext } from './SplashContext';
 import AuthNavigation from '~/app/features/auth/config/Navigation';
 import { AuthContext } from './AuthContext';
 import { NativeBaseProvider, extendTheme } from 'native-base';
+import ProductNavigation from '~/app/features/product/config/Navigation';
 
 const Root = createStackNavigator();
 
@@ -15,6 +16,7 @@ function listScreen() {
   return [
     ...HomeNavigation.getNavigation(Root),
     ...ScannerNavigation.getNavigation(Root),
+    ...ProductNavigation.getNavigation(Root),
   ];
 }
 
@@ -45,7 +47,7 @@ function RootNavigation() {
     },
   });
   const [isLogin, setIsLogin] = useState(false);
-  const theme = extendTheme({
+  const [theme, setTheme] = useState({
     colors: {
       // Add new color
       primary: {
@@ -73,7 +75,7 @@ function RootNavigation() {
 
   return (
 
-    <NativeBaseProvider theme={theme}>
+    <NativeBaseProvider theme={extendTheme(theme)}>
       <SplashContext.Provider 
       value={{ splashLoading, setSplashLoading }}>
           <AuthContext.Provider

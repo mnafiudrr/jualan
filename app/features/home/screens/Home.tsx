@@ -1,13 +1,87 @@
-import { View, Text, Alert, Button, StyleSheet, ScrollView, Image, TouchableOpacity, BackHandler } from 'react-native';
+import { Text, Alert, Button, StyleSheet, ScrollView, Image, TouchableOpacity, BackHandler, Dimensions } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import AppView from '~/app/core/component/AppView';
 import { CompositeNavigationProp, useFocusEffect } from '@react-navigation/native';
-import ScannerScreens from '../../scanner/config/Screens';
-import { MaterialIcons } from '@expo/vector-icons'; 
 import { AuthContext } from '~/app/core/config/AuthContext';
+import HomeHeader from '../components/HomeHeader';
+import { View } from 'native-base';
+import MenuBox from '../components/MenuBox';
+
+const screenWidth = Dimensions.get('window').width;
+
 
 export default function Home({ navigation }: { navigation: CompositeNavigationProp<any, any> }) {
   const { setIsLogin } = useContext(AuthContext);
+
+  const dummyList = [
+    {
+      name: 'Sell',
+      icon: 'cash-register',
+      color: 'blue.200'
+    },
+    {
+      name: 'Product',
+      icon: 'boxes',
+      color: 'red.200',
+      onPress: () => navigation.navigate('Product')
+    },
+    {
+      name: 'Category',
+      icon: 'list',
+      color: 'green.300'
+    },
+    {
+      name: 'Customer',
+      icon: 'user',
+      color: 'cyan.200'
+    },
+    {
+      name: 'Scanner',
+      icon: 'qrcode',
+      color: 'purple.200'
+    },
+    {
+      name: 'Stock In',
+      icon: 'arrow-down',
+      color: 'green.200'
+    },
+    {
+      name: 'Stock Out',
+      icon: 'arrow-up',
+      color: 'pink.200'
+    },
+    {
+      name: 'Report',
+      icon: 'file-invoice-dollar',
+      color: 'yellow.200'
+    },
+    {
+      name: 'Setting',
+      icon: 'cog',
+      color: 'orange.200',
+    },
+    {
+      name: 'Logout',
+      icon: 'sign-out-alt',
+      color: 'red.200',
+      onPress: () => {
+        Alert.alert(
+          "Logout",
+          "You sure to logout??",
+          [
+            {
+              text: "Logout",
+              onPress: () => setIsLogin(false),
+              style: "default",
+            },
+          ],
+          {
+            cancelable: true,
+          }
+        )
+      }
+    }
+  ];
 
   useFocusEffect(
     React.useCallback(() => {
@@ -36,20 +110,38 @@ export default function Home({ navigation }: { navigation: CompositeNavigationPr
   );
 
   return (
-    <AppView withSafeArea 
+    <AppView
+      withSafeArea
     >
-      <View style={styles.container}>
-        <Text>Home</Text>
+    <HomeHeader
+      title="Warung Bang Messi"
+    />
+      <ScrollView>
+        <View style={styles.container}>
+          {
+            dummyList.map((item, index) => (
+              <MenuBox
+                key={index}
+                name={item.name}
+                icon={item.icon}
+                color={item.color}
+                onPress={item.onPress}
+              />
+            ))
+          }
         </View>
+      </ScrollView>
     </AppView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    marginHorizontal:  (screenWidth * 0.4) / 35,
   },
   button: {
     width: 180,
@@ -66,10 +158,7 @@ const styles = StyleSheet.create({
   headerView: {
     backgroundColor: '#c5c5c5',
     padding: 10,
-    borderRadius: 10,
     alignItems: 'center',
-    width: 390,
-    marginBottom: 30
   },
   topHeaderText: {
     fontSize: 20,

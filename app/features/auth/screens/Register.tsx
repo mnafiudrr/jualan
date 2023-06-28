@@ -8,7 +8,7 @@ import { AuthContext } from '~/app/core/config/AuthContext';
 import { TouchableWithoutFeedback } from 'react-native';
 import AuthScreen from '../config/Screens';
 
-export default function Login({ navigation }: { navigation: CompositeNavigationProp<any, any> }) {
+export default function Register({ navigation }: { navigation: CompositeNavigationProp<any, any> }) {
 
   useFocusEffect(
     React.useCallback(() => {
@@ -44,26 +44,23 @@ export default function Login({ navigation }: { navigation: CompositeNavigationP
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <Image source={require('~/assets/icon.png')} style={styles.logo} alt="Alternate Text" size="2xl" />
-          <Text fontSize="2xl" fontWeight="bold">Welcome Back!</Text>
+          <Text fontSize="2xl" fontWeight="bold">Register</Text>
           <Input variant="underlined" h="10" placeholder="Username" w="100%" maxW="xs" marginBottom="1" />
+          <Input variant="underlined" h="10" placeholder="Full Name" w="100%" maxW="xs" marginBottom="1" />
+          <Input variant="underlined" h="10" placeholder="Email" inputMode='email' w="100%" maxW="xs" marginBottom="1" />
           <Input variant="underlined" h="10" w="100%" maxW="xs" type={show ? "text" : "password"} InputRightElement={<Pressable onPress={() => setShow(!show)}>
             <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={5} mr="2" color="muted.400" />
           </Pressable>} placeholder="Password" />
-          <View w="100%" maxW="xs" style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-            <Checkbox value="remember" my="1" size="sm">
-              <Text fontSize="sm">Remember me</Text>
-            </Checkbox>
-            <View style={{ flex: 1 }} />
-            <Text fontSize="sm" style={{ color: '#256FDC' }}>Forgot Password?</Text>
-          </View>
-          <Button h="10" w="100%" maxW="xs" marginTop="15" onPress={() => setIsLogin(true)}>
-            Login
+          <Input variant="underlined" h="10" w="100%" maxW="xs" type={show ? "text" : "password"} InputRightElement={<Pressable onPress={() => setShow(!show)}>
+            <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={5} mr="2" color="muted.400" />
+          </Pressable>} placeholder="Retype Password" />
+          <Button h="10" w="100%" maxW="xs" marginTop="15" onPress={() => {}}>
+            Register
           </Button>
           <View style={{ flexDirection: 'row', marginTop: 10 }}>
-            <Text style={{ color: 'grey' }}>Don't have an account? </Text>
-            <TouchableOpacity onPress={() => AuthScreen.REGISTER.navigate(navigation)}>
-              <Text style={{ color: '#256FDC' }}>Register</Text>
+            <Text style={{ color: 'grey' }}>Already have an account? </Text>
+            <TouchableOpacity onPress={() => AuthScreen.LOGIN.navigate(navigation)}>
+              <Text style={{ color: '#256FDC' }}>Login</Text>
             </TouchableOpacity>
           </View>
         </View>

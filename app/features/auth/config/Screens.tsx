@@ -5,6 +5,10 @@ const AuthScreen = {
     KEY: 'Login',
     TITLE: 'Login',
   }),
+  REGISTER: new ScreenData<any>({
+    KEY: 'Register',
+    TITLE: 'Register',
+  }),
 };
 
 export default AuthScreen;
