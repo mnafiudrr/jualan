@@ -2,7 +2,7 @@
   "expo": {
     "name": "jualan",
     "slug": "jualan",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,11 +20,16 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.fiufiu.qrpremium",
-      "versionCode": 2
+      "package": "com.fiufiu.jualan",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9459adb0-c894-4fd8-b787-4d9abca2c799"
+      }
     }
   }
 }
