@@ -5,7 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { CompositeNavigationProp, useNavigation } from '@react-navigation/core';
 import AppColors from '../static/AppColors';
 import ToggleableSafeArea from './ToggleSafeArea';
-import { Text, View } from 'native-base';
+import { Text, View, useColorModeValue } from 'native-base';
 import { widthPercentageToDP as wp} from 'react-native-responsive-screen';
 
 export default function PageHeader({
@@ -16,6 +16,7 @@ export default function PageHeader({
   withSafeArea?: boolean, suffix?: any, backButton?: any
 }) {
   const navigation = useNavigation<CompositeNavigationProp<any, any>>();
+  const iconDefaultColor = useColorModeValue("black", "white");
   return (
     <ToggleableSafeArea edges={['top']} active={withSafeArea ?? false} style={style}>
       <View style={{
@@ -28,7 +29,7 @@ export default function PageHeader({
       }}
       >
         <View w={'5'}>        
-          <AntDesign onPress={backButton || navigation.goBack} name="arrowleft" color={'black'} size={24} style={{ marginTop: 10 }} />
+          <AntDesign onPress={backButton || navigation.goBack} name="arrowleft" color={iconColor??iconDefaultColor} size={24} style={{ marginTop: 10 }} />
         </View>
         <View style={{ flex: 1, alignItems: 'center' }} >
           <Text

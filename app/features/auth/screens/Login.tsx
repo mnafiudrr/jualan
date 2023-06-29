@@ -43,29 +43,32 @@ export default function Login({ navigation }: { navigation: CompositeNavigationP
     <AppView withSafeArea
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-          <Image source={require('~/assets/icon.png')} style={styles.logo} alt="Alternate Text" size="2xl" />
-          <Text fontSize="2xl" fontWeight="bold">Welcome Back!</Text>
-          <Input variant="underlined" h="10" placeholder="Username" w="100%" maxW="xs" marginBottom="1" />
-          <Input variant="underlined" h="10" w="100%" maxW="xs" type={show ? "text" : "password"} InputRightElement={<Pressable onPress={() => setShow(!show)}>
-            <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={5} mr="2" color="muted.400" />
-          </Pressable>} placeholder="Password" />
-          <View w="100%" maxW="xs" style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-            <Checkbox value="remember" my="1" size="sm">
-              <Text fontSize="sm">Remember me</Text>
-            </Checkbox>
-            <View style={{ flex: 1 }} />
-            <Text fontSize="sm" style={{ color: '#256FDC' }}>Forgot Password?</Text>
+        <View style={{ flex: 1 }}>
+          <View style={styles.container}>
+            <Image source={require('~/assets/adaptive-icon.png')} style={styles.logo} alt="Alternate Text" size="2xl" />
+            <Text fontSize="2xl" fontWeight="bold">Welcome Back!</Text>
+            <Input variant="underlined" h="10" placeholder="Username" w="100%" maxW="xs" marginBottom="1" />
+            <Input variant="underlined" h="10" w="100%" maxW="xs" type={show ? "text" : "password"} InputRightElement={<Pressable onPress={() => setShow(!show)}>
+              <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={5} mr="2" color="muted.400" />
+            </Pressable>} placeholder="Password" />
+            <View w="100%" maxW="xs" style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+              <Checkbox value="remember" my="1" size="sm">
+                <Text fontSize="sm">Remember me</Text>
+              </Checkbox>
+              <View style={{ flex: 1 }} />
+              <Text fontSize="sm" style={{ color: '#256FDC' }}>Forgot Password?</Text>
+            </View>
+            <Button h="10" w="100%" maxW="xs" marginTop="15" onPress={() => setIsLogin(true)}>
+              Login
+            </Button>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
+              <Text style={{ color: 'grey' }}>Don't have an account? </Text>
+              <TouchableOpacity onPress={() => AuthScreen.REGISTER.navigate(navigation)}>
+                <Text style={{ color: '#256FDC' }}>Register</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <Button h="10" w="100%" maxW="xs" marginTop="15" onPress={() => setIsLogin(true)}>
-            Login
-          </Button>
-          <View style={{ flexDirection: 'row', marginTop: 10 }}>
-            <Text style={{ color: 'grey' }}>Don't have an account? </Text>
-            <TouchableOpacity onPress={() => AuthScreen.REGISTER.navigate(navigation)}>
-              <Text style={{ color: '#256FDC' }}>Register</Text>
-            </TouchableOpacity>
-          </View>
+          <Text alignSelf={'center'} paddingBottom={2}>Version 0.0.2</Text>
         </View>
       </TouchableWithoutFeedback>
     </AppView>

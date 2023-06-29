@@ -1,12 +1,14 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import axios from 'axios';
+import { Text, useColorMode } from 'native-base';
 import React, { useContext, useEffect, useState } from 'react';
 import {
-  StyleSheet, View, ActivityIndicator, Platform, Dimensions, Text, Image,
+  StyleSheet, View, ActivityIndicator, Platform, Dimensions, Image,
 } from 'react-native';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import AppText from '~/app/core/component/AppText';
 import AppView from '~/app/core/component/AppView';
+import { AuthContext } from '~/app/core/config/AuthContext';
 import { SplashContext } from '~/app/core/config/SplashContext';
 
 const heightScreen = Dimensions.get('screen').height;
@@ -41,32 +43,40 @@ export default function Splash({navigation}: {navigation: CompositeNavigationPro
 
   const { setSplashLoading } = useContext(SplashContext);
   const [imageUrl, setImageUrl] = useState(`https://i.mydramalist.com/pJZRB_5f.jpg`);
+  const { setMode } = useContext(AuthContext);
+  const { setColorMode } = useColorMode();
+
   useEffect(() => {
+    getData();
     setTimeout(() => {
       setSplashLoading(false);
     }, 3000);
   }, []);
-  
-  const getImage = async () => {
 
-    setTimeout(() => {
-      // setSplashLoading(false);
-    }, 3000);
-
-  }
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('mode');
+      if (value !== null) {
+        console.log(value);
+        setMode(value);
+        setColorMode(value);
+      }
+    } catch (e) {
+    }
+  };
 
 
   return (
     <AppView withSafeArea withHeader={false}>
       <View style={styles.container}>
         <Image style={styles.logo} source={ require('~/assets/icon.png') }/>
-        <AppText fontSize={30} fontWeight='bold'>
+        <Text fontSize={30} fontWeight='bold'>
           Jualan
-        </AppText>
+        </Text>
       </View>
       <View style={styles.containerFooter}>
         <ActivityIndicator style={styles.loader} size={'large'} color={'grey'} />
-        <AppText style={styles.footer}>Loading ...</AppText>
+        <Text style={styles.footer}>Loading ...</Text>
       </View>
     </AppView>
   );

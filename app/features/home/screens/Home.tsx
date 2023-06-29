@@ -17,53 +17,53 @@ export default function Home({ navigation }: { navigation: CompositeNavigationPr
     {
       name: 'Sell',
       icon: 'cash-register',
-      color: 'blue.200'
+      color: 'blue'
     },
     {
       name: 'Product',
       icon: 'boxes',
-      color: 'red.200',
+      color: 'red',
       onPress: () => navigation.navigate('Product')
     },
     {
       name: 'Category',
       icon: 'list',
-      color: 'green.300'
+      color: 'pink'
     },
     {
       name: 'Customer',
       icon: 'user',
-      color: 'cyan.200'
+      color: 'cyan'
     },
     {
       name: 'Scanner',
       icon: 'qrcode',
-      color: 'purple.200'
+      color: 'purple'
     },
     {
       name: 'Stock In',
       icon: 'arrow-down',
-      color: 'green.200'
+      color: 'green'
     },
     {
       name: 'Stock Out',
       icon: 'arrow-up',
-      color: 'pink.200'
+      color: 'darkBlue'
     },
     {
       name: 'Report',
       icon: 'file-invoice-dollar',
-      color: 'yellow.200'
+      color: 'yellow'
     },
     {
       name: 'Setting',
       icon: 'cog',
-      color: 'orange.200',
+      color: 'teal',
     },
     {
       name: 'Logout',
       icon: 'sign-out-alt',
-      color: 'red.200',
+      color: 'red',
       onPress: () => {
         Alert.alert(
           "Logout",

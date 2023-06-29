@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import SplashNavigation from '~/app/features/splash/config/Navigation';
 import HomeNavigation from '~/app/features/home/config/Navigation';
@@ -7,7 +7,7 @@ import ScannerNavigation from '~/app/features/scanner/config/Navigation';
 import { SplashContext } from './SplashContext';
 import AuthNavigation from '~/app/features/auth/config/Navigation';
 import { AuthContext } from './AuthContext';
-import { NativeBaseProvider, extendTheme } from 'native-base';
+import { NativeBaseProvider, extendTheme, useColorModeValue } from 'native-base';
 import ProductNavigation from '~/app/features/product/config/Navigation';
 
 const Root = createStackNavigator();
@@ -32,7 +32,12 @@ function splashScreen() {
   ]
 }
 
-function RootNavigation() {
+type RootNavigationProps = {
+  mode: string;
+  setMode: (mode: string) => void;
+}
+
+function RootNavigation({ mode, setMode }: RootNavigationProps) {
 
   const [splashLoading, setSplashLoading] = useState(true);
   const [authData, setAuthData] = useState({
@@ -62,13 +67,11 @@ function RootNavigation() {
         800: '#005885',
         900: '#003F5E',
       },
-      // Redefining only one shade, rest of the color will remain same.
       amber: {
         400: '#d97706',
       },
     },
     config: {
-      // Changing initialColorMode to 'dark'
       initialColorMode: 'light',
     },
   });
@@ -79,7 +82,7 @@ function RootNavigation() {
       <SplashContext.Provider 
       value={{ splashLoading, setSplashLoading }}>
           <AuthContext.Provider
-          value={{ authData, setAuthData, isLogin, setIsLogin }}>
+          value={{ authData, setAuthData, isLogin, setIsLogin, mode, setMode }}>
           <Root.Navigator>
             {
               splashLoading ?

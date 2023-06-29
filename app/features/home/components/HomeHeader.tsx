@@ -1,21 +1,43 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { TextStyle, View, ViewStyle } from 'react-native';
-import { Entypo, Foundation } from '@expo/vector-icons';
+import { Entypo, Feather } from '@expo/vector-icons';
 import { CompositeNavigationProp, useNavigation } from '@react-navigation/core';
-import { Avatar, Text } from 'native-base';
+import { Avatar, Text, useColorMode, useColorModeValue } from 'native-base';
 import { widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import ToggleableSafeArea from '~/app/core/component/ToggleSafeArea';
 import AppColors from '~/app/core/static/AppColors';
+import { AuthContext } from '~/app/core/config/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeHeader({
-  title, style, textStyle, iconColor, withSafeArea, suffix, backButton,
+  title, style, textStyle, withSafeArea, suffix, backButton,
 }: {
   title?: string, style?:
   ViewStyle, textStyle?: TextStyle, iconColor?: string,
   withSafeArea?: boolean, suffix?: any, backButton?: any
 }) {
   const navigation = useNavigation<CompositeNavigationProp<any, any>>();
+  const iconColor = useColorModeValue("black", "white");
+  const { setMode } = useContext(AuthContext);
+  const {
+    toggleColorMode
+  } = useColorMode();
+
+  useEffect(() => {
+    const mode = iconColor == 'white' ? 'dark' : 'light';
+    setMode(mode);
+    storeToLocal(mode);
+  }, [iconColor]);
+
+  const storeToLocal = async (value: string) => {
+    try {
+      await AsyncStorage.setItem('mode', value);
+    } catch (e) {
+      // saving error
+    }
+  };
+
   return (
     <ToggleableSafeArea edges={['top']} active={withSafeArea ?? false} style={style}>
       <View style={{
@@ -40,8 +62,12 @@ export default function HomeHeader({
           </Text>
         </View>
         <View style={{ flexDirection: 'row', marginTop: 5 }} >
-          <Entypo name="magnifying-glass" size={24} color="black" style={{ marginRight: 15 }} />
-          <Foundation name="align-right" size={24} color="black" />
+          <Entypo name="magnifying-glass" size={24} color={iconColor} style={{ marginRight: 15 }} />
+          {
+            iconColor != 'white' ?
+            <Feather name="sun" size={24} color={iconColor} onPress={toggleColorMode}/> :
+            <Entypo name="moon" size={24} color={iconColor} onPress={toggleColorMode}/>
+          }
         </View>
       </View>
       {suffix}
@@ -53,7 +79,6 @@ HomeHeader.defaultProps = {
   title: '',
   style: {},
   textStyle: {},
-  iconColor: AppColors.red,
   withSafeArea: false,
   suffix: null,
 };
