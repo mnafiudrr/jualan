@@ -15,7 +15,7 @@ export default function AppView({
   title?: string, style?: ViewStyle,
   styleBg?: ViewStyle,
   styleHeader?: ViewStyle, suffixHeader?: React.ReactNode, backButton?:any | null}) {
-  const bg = useColorModeValue("#fafaf9", "#1c1917");
+  const bg = useColorModeValue("#fafaf9", "#000000");
   const barStyle = useColorModeValue("dark-content", "light-content");
   return (
     <ToggleableSafeArea active={withSafeArea ?? false} style={{flex: 1, ...style, backgroundColor: bg}}>

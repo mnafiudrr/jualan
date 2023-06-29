@@ -7,26 +7,32 @@ import { Entypo, AntDesign, SimpleLineIcons, MaterialIcons } from '@expo/vector-
 import { Path } from 'react-native-svg';
 import ProductBox from '../components/ProductBox';
 import Modal from "react-native-modal";
+import AppSearchBar from '~/app/core/component/AppSearchBar';
 
 const screenWidth = Dimensions.get('window').width;
+
+const dummyList = [
+  {
+    id: 1,
+    name: 'Masako Ayam',
+    image: 'https://images.tokopedia.net/img/cache/700/attachment/2019/12/4/157539860879169/157539860879169_3f9ec97d-5fdd-4245-af20-2f7741279bc6.png',
+    price: 2000,
+  },
+  {
+    id: 2,
+    name: 'Masako Sapi',
+    image: 'https://images.tokopedia.net/img/cache/700/attachment/2019/12/4/157539860879169/157539860879169_3f9ec97d-5fdd-4245-af20-2f7741279bc6.png',
+    price: 2000,
+  },
+];
 
 export default function Product({ navigation }: { navigation: CompositeNavigationProp<any, any> }) {
 
   const [showOption, setShowOption] = useState(false);
   const bg = useColorModeValue("light.200", "coolGray.800");
 
-  const dummyList = [
-    {
-      name: 'Masako Ayam',
-      image: 'https://images.tokopedia.net/img/cache/700/attachment/2019/12/4/157539860879169/157539860879169_3f9ec97d-5fdd-4245-af20-2f7741279bc6.png',
-      price: 2000,
-    },
-    {
-      name: 'Masako Sapi',
-      image: 'https://images.tokopedia.net/img/cache/700/attachment/2019/12/4/157539860879169/157539860879169_3f9ec97d-5fdd-4245-af20-2f7741279bc6.png',
-      price: 2000,
-    },
-  ];
+  const [allProduct, setAllProduct] = useState(dummyList);
+  const [filteredProduct, setFilteredProduct] = useState(allProduct);
 
   const [selectedProduct, setselectedProduct] = useState({
     name: '',
@@ -34,9 +40,14 @@ export default function Product({ navigation }: { navigation: CompositeNavigatio
     price: 0,
   })
 
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    setFilteredProduct(allProduct.filter((item) => item.name.toLowerCase().includes(search.toLowerCase())));
+  }, [search]);
+
   const openSetting = (item: any) => {
     setselectedProduct(item);
-    // onOpen();
     setShowOption(true);
   }
 
@@ -44,17 +55,12 @@ export default function Product({ navigation }: { navigation: CompositeNavigatio
     <AppView
       withHeader
       title='Product'
-      // style={{ backgroundColor: 'red' }}
     >
-      <View style={styles.searchContainer}>
-        <Entypo name="magnifying-glass" size={24} color="grey" style={{ marginRight: -30 }} />
-        <Input variant="rounded" w={'85%'} maxW={1000} placeholder='search' style={{ paddingLeft: 30 }} fontSize='sm'/>
-        <AntDesign name="filter" size={24} color="grey" style={{ marginLeft: 10 }}/>
-      </View>
+      <AppSearchBar onSearch={(value) => setSearch(value)} defaultValue={search} />
       <View style={styles.container}>
         <ScrollView>
           {
-            dummyList.map((item, index) => (
+            filteredProduct.map((item, index) => (
               <ProductBox
                 key={index}
                 name={item.name}

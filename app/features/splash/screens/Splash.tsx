@@ -57,7 +57,6 @@ export default function Splash({navigation}: {navigation: CompositeNavigationPro
     try {
       const value = await AsyncStorage.getItem('mode');
       if (value !== null) {
-        console.log(value);
         setMode(value);
         setColorMode(value);
       }
