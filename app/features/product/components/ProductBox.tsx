@@ -6,10 +6,11 @@ type ProductBoxProps = {
   name: string,
   image: string,
   price: number,
+  stock: number,
   onPress?: () => void
 }
 
-export default function ProductBox({ name, image, price, onPress }: ProductBoxProps) {
+export default function ProductBox({ name, image, price, stock, onPress }: ProductBoxProps) {
   // const bgColor = useColorModeValue("trueGray.200", "trueGray.900");
   const bgColor = useColorModeValue("trueGray.200", "light.900");
   return (
@@ -20,7 +21,7 @@ export default function ProductBox({ name, image, price, onPress }: ProductBoxPr
           <Text fontSize={'md'} fontWeight={'bold'}>{name}</Text>
           <View>
             <Text fontSize={'sm'}>Rp. {price.toLocaleString('id-ID')}</Text>
-            <Text fontSize={'sm'}>Stock: 10</Text>
+            <Text fontSize={'sm'}>Stock: {stock.toLocaleString('id-ID')}</Text>
           </View>
         </View>
         <Pressable onPress={onPress}>

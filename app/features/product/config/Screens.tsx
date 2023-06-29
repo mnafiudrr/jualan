@@ -5,6 +5,10 @@ const ProductScreen = {
     KEY: 'Product',
     TITLE: 'Product',
   }),
+  DETAIL_PRODUCT: new ScreenData<any>({
+    KEY: 'DetailProduct',
+    TITLE: 'Detail Product',
+  }),
 };
 
 export default ProductScreen;
