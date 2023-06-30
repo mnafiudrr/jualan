@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, ScrollView, TouchableOpacity, BackHandler, Dimensions } from 'react-native';
+import { Alert, StyleSheet, ScrollView, TouchableOpacity, BackHandler, Dimensions, ActivityIndicator } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import AppView from '~/app/core/component/AppView';
 import { CompositeNavigationProp, useFocusEffect } from '@react-navigation/native';
@@ -9,34 +9,26 @@ import ProductBox from '../components/ProductBox';
 import Modal from "react-native-modal";
 import AppSearchBar from '~/app/core/component/AppSearchBar';
 import ProductScreen from '../config/Screens';
+import axios from 'axios';
 
 const screenWidth = Dimensions.get('window').width;
-
-const dummyList = [
-  {
-    id: 1,
-    name: 'Masako Ayam',
-    image: 'https://images.tokopedia.net/img/cache/700/attachment/2019/12/4/157539860879169/157539860879169_3f9ec97d-5fdd-4245-af20-2f7741279bc6.png',
-    price: 2000,
-    stock: 10,
-  },
-  {
-    id: 2,
-    name: 'Masako Sapi',
-    image: 'https://images.tokopedia.net/img/cache/700/attachment/2019/12/4/157539860879169/157539860879169_3f9ec97d-5fdd-4245-af20-2f7741279bc6.png',
-    price: 2000,
-    stock: 10,
-  },
-];
+type ProductStateType = {
+  id: number,
+  name: string,
+  image: string,
+  price: number,
+  stock: number,
+};
 
 export default function Product({ navigation }: { navigation: CompositeNavigationProp<any, any> }) {
 
   const [showOption, setShowOption] = useState(false);
   const bg = useColorModeValue("light.200", "coolGray.800");
   const toast = useToast();
+  const iconColor = useColorModeValue('black', 'white');
+  const [showLoading, setShowLoading] = useState(false);
 
-  const [allProduct, setAllProduct] = useState(dummyList);
-  const [filteredProduct, setFilteredProduct] = useState(allProduct);
+  const [allProduct, setAllProduct] = useState<ProductStateType[]>([]);
 
   const [selectedProduct, setselectedProduct] = useState({
     id: 0,
@@ -47,10 +39,6 @@ export default function Product({ navigation }: { navigation: CompositeNavigatio
   })
 
   const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    searchProduct();
-  }, [search, allProduct]);
 
   const openSetting = (item: any) => {
     setselectedProduct(item);
@@ -67,8 +55,33 @@ export default function Product({ navigation }: { navigation: CompositeNavigatio
     })
   }
 
-  const searchProduct = () => {
-    setFilteredProduct(allProduct.filter((item) => item.name.toLowerCase().includes(search.toLowerCase())));
+  const filterProduct = (arr: any[], findText: string) => {
+    return arr.filter((item) => item.name.toLowerCase().includes(findText.toLowerCase()));
+  }
+
+  useEffect(() => {
+    getData();
+  },[]);
+
+  const getData = async () => {
+    setShowLoading(true);
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `https://fakestoreapi.com/products?limit=50`,
+        timeout: 15000,
+      });
+
+      const data = response.data.map((item: any) => {
+        return { ...item, stock: Math.floor(Math.random() * 10000), name: item.title, price: item.price*1000 };
+      });
+
+      setAllProduct(data);
+      
+    } catch (error) {
+      
+    }
+    setShowLoading(false);
   }
 
   return (
@@ -78,9 +91,17 @@ export default function Product({ navigation }: { navigation: CompositeNavigatio
     >
       <AppSearchBar onSearch={(value) => setSearch(value)} defaultValue={search} />
       <View style={styles.container}>
+        {
+          showLoading && (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <ActivityIndicator size="large" color={iconColor} />
+            </View>
+          )
+        }
         <ScrollView>
-          {
-            filteredProduct.map((item, index) => (
+          { 
+            !showLoading && (( filterProduct(allProduct, search).length >= 0 ) ?
+            filterProduct(allProduct, search).map((item, index) => (
               <ProductBox
                 key={index}
                 name={item.name}
@@ -89,7 +110,9 @@ export default function Product({ navigation }: { navigation: CompositeNavigatio
                 stock={item.stock}
                 onPress={() => openSetting(item)}
               />
-            ))
+            )) : (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Text>No Product Found</Text>
+            </View>))
           }
         </ScrollView>
       </View>
@@ -167,8 +190,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flex: 1,
     marginHorizontal:  (screenWidth / 2.5) / 10,
   },
   modalView: {

@@ -17,7 +17,8 @@ export default function Home({ navigation }: { navigation: CompositeNavigationPr
     {
       name: 'Sell',
       icon: 'cash-register',
-      color: 'blue'
+      color: 'blue',
+      onPress: () => navigation.navigate('Sale')
     },
     {
       name: 'Product',

@@ -31,12 +31,14 @@ export default function PageHeader({
         <View w={'5'}>        
           <AntDesign onPress={backButton || navigation.goBack} name="arrowleft" color={iconColor??iconDefaultColor} size={24} style={{ marginTop: 10 }} />
         </View>
-        <View style={{ flex: 1, alignItems: 'center' }} >
+        <View style={{ flex: 1, alignItems: 'center', }} >
           <Text
+            textAlign={'center'}
             fontWeight={'600'}
             fontSize={'lg'}
             marginLeft={2}
             marginTop={2}
+            maxH={'50'}
             >
             {title}
           </Text>

@@ -9,6 +9,7 @@ import AuthNavigation from '~/app/features/auth/config/Navigation';
 import { AuthContext } from './AuthContext';
 import { NativeBaseProvider, extendTheme, useColorModeValue } from 'native-base';
 import ProductNavigation from '~/app/features/product/config/Navigation';
+import SaleNavigation from '~/app/features/sale/config/Navigation';
 
 const Root = createStackNavigator();
 
@@ -17,6 +18,7 @@ function listScreen() {
     ...HomeNavigation.getNavigation(Root),
     ...ScannerNavigation.getNavigation(Root),
     ...ProductNavigation.getNavigation(Root),
+    ...SaleNavigation.getNavigation(Root),
   ];
 }
 

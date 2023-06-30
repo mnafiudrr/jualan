@@ -68,7 +68,7 @@ export default function Login({ navigation }: { navigation: CompositeNavigationP
               </TouchableOpacity>
             </View>
           </View>
-          <Text alignSelf={'center'} paddingBottom={2}>Version 0.0.2</Text>
+          <Text alignSelf={'center'} paddingBottom={2}>Version 0.0.3</Text>
         </View>
       </TouchableWithoutFeedback>
     </AppView>

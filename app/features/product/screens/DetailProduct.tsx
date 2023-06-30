@@ -5,6 +5,7 @@ import { CompositeNavigationProp, useNavigation } from '@react-navigation/native
 import { Button, FormControl, Image, Input, Text, View, WarningOutlineIcon, useColorModeValue } from 'native-base';
 import { Entypo } from '@expo/vector-icons';
 import ProductScreen from '../config/Screens';
+import axios from 'axios';
 
 type RouteProps = {
   route?: any
@@ -14,9 +15,23 @@ export default function DetailProduct({ route }: RouteProps) {
   const { data, config } = route.params;
   const navigation = useNavigation<CompositeNavigationProp<any, any>>();
   
-  const [product, setProduct] = useState(data);
+  const [product, setProduct] = useState({name: '', image: '', price: 0, stock: 0});
+
+  useEffect(() => {
+    getData();
+  }, []);
   
-  const iconColor = useColorModeValue("light.200", "coolGray.800");
+  const getData = async () => {
+    try {
+      const res = await axios({
+        method: 'GET',
+        url: `https://fakestoreapi.com/products/${data.id}`,
+      })
+      setProduct({...res.data, name: res.data.title, stock: Math.floor(Math.random() * 1000)});
+      
+    } catch (e) {
+    }
+  }
 
   return (
     <AppView
@@ -28,9 +43,12 @@ export default function DetailProduct({ route }: RouteProps) {
           <FormControl.Label>Image</FormControl.Label>
           <View flexDir={'row'} alignItems={'flex-end'}>
             <Image size={'xl'} borderRadius={10} source={{ uri: data.image }} alt={data.name} />
-            <Button flexDir={'row'} colorScheme={'muted'} ml={5}>
-              <Text>Change Image</Text>
-            </Button>
+            {
+              config.disabled ? null : (
+                <Button flexDir={'row'} colorScheme={'muted'} ml={5}>
+                  <Text>Change Image</Text>
+                </Button>)
+            }
           </View>
           <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
             File harus berupa gambar.
