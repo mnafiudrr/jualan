@@ -1,18 +1,17 @@
 import { StyleSheet, ScrollView, Dimensions, ActivityIndicator } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import AppView from '~/app/core/component/AppView';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { Text, View, useColorModeValue, useToast } from 'native-base';
 import ProductBox from '../components/ProductBox';
 import AppSearchBar from '~/app/core/component/AppSearchBar';
-import { dummyProductList } from '~/app/core/static/DummyData';
 import axios from 'axios';
 
 const screenWidth = Dimensions.get('window').width;
 
 export default function Sale({ navigation }: { navigation: CompositeNavigationProp<any, any> }) {
 
-  const [showLoading, setshowLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const iconColor = useColorModeValue('black', 'white');
 
   type ProductStateType = {
@@ -21,21 +20,23 @@ export default function Sale({ navigation }: { navigation: CompositeNavigationPr
     image: string;
     price: number;
     stock: number;
+    qty: number;
   };
   const [allProduct, setAllProduct] = useState<ProductStateType[]>([]);
 
   const [search, setSearch] = useState('');
-
+  
   const filterProduct = (arr: any[], findText: string) => {
-    return arr.filter((item) => item.name.toLowerCase().includes(findText.toLowerCase()));
-  }
+    const searchText = findText.toLowerCase();
+    return arr.filter((item) => item.name.toLowerCase().indexOf(searchText) !== -1);
+  };
 
   useEffect(() => {
     getData();
   },[]);
 
   const getData = async () => {
-    setshowLoading(true);
+    setShowLoading(true);
     try {
       const response = await axios({
         method: 'get',
@@ -44,16 +45,28 @@ export default function Sale({ navigation }: { navigation: CompositeNavigationPr
       });
 
       const data = response.data.map((item: any) => {
-        return { ...item, stock: Math.floor(Math.random() * 2000), name: item.title, price: item.price*1000 };
+        return { ...item, stock: Math.floor(Math.random() * 2000), name: item.title, price: item.price*1000, qty: 0};
       });
 
       setAllProduct(data);
     } catch (error) {
+      console.log(error);
       
     }
-    setshowLoading(false);
+    setShowLoading(false);
   }
 
+  const updateQty = useCallback(
+    (item: { id: number; qty: number }) => {
+      setAllProduct((prevProducts) =>
+        prevProducts.map((product) =>
+          product.id === item.id ? { ...product, qty: item.qty } : product
+        )
+      );
+    },
+    []
+  );
+  
   return (
     <AppView
       withHeader
@@ -71,21 +84,24 @@ export default function Sale({ navigation }: { navigation: CompositeNavigationPr
         <ScrollView
           showsVerticalScrollIndicator={false}
         >
-          { !showLoading && ((filterProduct(allProduct, search).length >= 0) ? 
+          { !showLoading && (
+            filterProduct(allProduct, search).length > 0 ? 
             filterProduct(allProduct, search).map((item: any, index) => (
               <ProductBox
                 key={index}
+                id={item.id}
                 name={item.name}
                 image={item.image}
                 price={item.price}
                 stock={item.stock}
-                onPress={() => {}}
+                qty={item.qty}
+                onUpdate={(val) => updateQty(val)}
               />
             )) : 
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <Text>No Data</Text>
-            </View>)
-          }
+            </View>
+          )}
         </ScrollView>
       </View>
     </AppView>

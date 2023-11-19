@@ -1,12 +1,17 @@
 import { Alert, StyleSheet, ScrollView, TouchableOpacity, BackHandler, Keyboard } from 'react-native';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import AppView from '~/app/core/component/AppView';
 import { CompositeNavigationProp, useFocusEffect } from '@react-navigation/native';
-import { Button, Checkbox, Icon, Image, Input, Pressable, View, Text } from 'native-base';
+import { Button, Checkbox, Icon, Image, Input, Pressable, View, Text, KeyboardAvoidingView } from 'native-base';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { AuthContext } from '~/app/core/config/AuthContext';
 import { TouchableWithoutFeedback } from 'react-native';
 import AuthScreen from '../config/Screens';
+import { showLoading } from '~/app/core/utils/loader';
+import axios from 'axios';
+import { URL_LOGIN } from '~/app/service/ApiServices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import InputForm, { inputHandle } from '~/app/core/component/InputForm';
 
 export default function Login({ navigation }: { navigation: CompositeNavigationProp<any, any> }) {
 
@@ -37,7 +42,66 @@ export default function Login({ navigation }: { navigation: CompositeNavigationP
   );
 
   const [show, setShow] = React.useState(false);
-  const { setIsLogin } = useContext(AuthContext);
+  const { setIsLogin, setAuthData } = useContext(AuthContext);
+
+  const usernameRef = useRef<inputHandle>(null);
+  const passwordRef = useRef<inputHandle>(null);
+
+  const [data, setData] = useState({
+    username: '',
+    password: '',
+  });
+
+  const toggleLogin = async() => {
+    showLoading(true);
+    try {
+      const promise = await axios({
+        method: 'post',
+        url: URL_LOGIN,
+        timeout: 15000,
+        data: data,
+      });
+      
+      const response_data = promise.data.data;
+
+      setAuthData({
+        token: response_data.token,
+        user: {
+          id: response_data.user.id,
+          name: response_data.user.profile.fullname,
+          email: response_data.user.email,
+          role: response_data.user.role,
+          avatar: response_data.user.avatar??'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
+          avatar_url: response_data.user.avatar_url??'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
+          shop_name: response_data.shop.name,
+        },
+      });
+
+      await AsyncStorage.setItem('token', response_data.token);
+
+      setIsLogin(true);
+      showLoading(false);
+
+    } catch (error: any) {
+      
+      Alert.alert(
+        "Login Failed",
+        error.response.data.message,
+        [
+          {
+            text: "OK",
+            style: "default",
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      )
+
+      showLoading(false);
+
+    }
+  }
 
   return (
     <AppView withSafeArea
@@ -47,10 +111,27 @@ export default function Login({ navigation }: { navigation: CompositeNavigationP
           <View style={styles.container}>
             <Image source={require('~/assets/adaptive-icon.png')} style={styles.logo} alt="Alternate Text" size="2xl" />
             <Text fontSize="2xl" fontWeight="bold">Welcome Back!</Text>
-            <Input variant="underlined" h="10" placeholder="Username" w="100%" maxW="xs" marginBottom="1" />
-            <Input variant="underlined" h="10" w="100%" maxW="xs" type={show ? "text" : "password"} InputRightElement={<Pressable onPress={() => setShow(!show)}>
-              <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={5} mr="2" color="muted.400" />
-            </Pressable>} placeholder="Password" />
+            <InputForm
+              value={data.username}
+              onChangeText={(value) => setData({ ...data, username: value })}
+              placeholder="Username"
+              style={{ marginBottom: 1 }}
+              ref={usernameRef}
+              returnKeyType="next"
+              onSubmitEditing={() => passwordRef.current?.onFocus()}
+            />
+            <InputForm
+              value={data.password}
+              onChangeText={(value) => setData({ ...data, password: value })}
+              placeholder="Password"
+              secureTextEntry={true}
+              ref={passwordRef}
+              returnKeyType="done"
+              onSubmitEditing={toggleLogin}
+              InputRightElement={<Pressable onPress={() => setShow(!show)}>
+                <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={5} mr="2" color="muted.400" />
+              </Pressable>}
+            />
             <View w="100%" maxW="xs" style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
               <Checkbox value="remember" my="1" size="sm">
                 <Text fontSize="sm">Remember me</Text>
@@ -58,7 +139,7 @@ export default function Login({ navigation }: { navigation: CompositeNavigationP
               <View style={{ flex: 1 }} />
               <Text fontSize="sm" style={{ color: '#256FDC' }}>Forgot Password?</Text>
             </View>
-            <Button h="10" w="100%" maxW="xs" marginTop="15" onPress={() => setIsLogin(true)}>
+            <Button h="10" w="100%" maxW="xs" marginTop="15" onPress={toggleLogin}>
               Login
             </Button>
             <View style={{ flexDirection: 'row', marginTop: 10 }}>
@@ -68,7 +149,9 @@ export default function Login({ navigation }: { navigation: CompositeNavigationP
               </TouchableOpacity>
             </View>
           </View>
-          <Text alignSelf={'center'} paddingBottom={2}>Version 0.0.3</Text>
+          <KeyboardAvoidingView behavior="padding">
+            <Text alignSelf={'center'} paddingBottom={2}>Version 0.0.3</Text>
+          </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>
     </AppView>

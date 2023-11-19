@@ -11,11 +11,11 @@ import { AuthContext } from '~/app/core/config/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeHeader({
-  title, style, textStyle, withSafeArea, suffix, backButton,
+  title, style, textStyle, withSafeArea, suffix, backButton, avatar
 }: {
   title?: string, style?:
   ViewStyle, textStyle?: TextStyle, iconColor?: string,
-  withSafeArea?: boolean, suffix?: any, backButton?: any
+  withSafeArea?: boolean, suffix?: any, backButton?: any, avatar?: string
 }) {
   const navigation = useNavigation<CompositeNavigationProp<any, any>>();
   const iconColor = useColorModeValue("black", "white");
@@ -51,7 +51,7 @@ export default function HomeHeader({
       }}
       >
         <View style={{ flexDirection: 'row' }} >
-          <Avatar size="sm" source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSzYPOAEJlWa6pj-zkTb8hjwwxMTpoCTCpzQ&usqp=CAU' }} marginTop={1} />
+          <Avatar size="sm" source={{ uri: avatar ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSzYPOAEJlWa6pj-zkTb8hjwwxMTpoCTCpzQ&usqp=CAU' }} marginTop={1} />
           <Text
             fontWeight={'600'}
             fontSize={'lg'}

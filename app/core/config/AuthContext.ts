@@ -10,6 +10,7 @@ const AuthCtxDefaultValue = {
       role: '',
       avatar: '',
       avatar_url: '',
+      shop_name: '',
     },
   },
   setAuthData: (authData: any) => {},

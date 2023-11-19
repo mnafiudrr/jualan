@@ -6,12 +6,15 @@ import { AuthContext } from '~/app/core/config/AuthContext';
 import HomeHeader from '../components/HomeHeader';
 import { View } from 'native-base';
 import MenuBox from '../components/MenuBox';
+import { showLoading } from '~/app/core/utils/loader';
+import axios from 'axios';
+import { URL_LOGOUT } from '~/app/service/ApiServices';
 
 const screenWidth = Dimensions.get('window').width;
 
 
 export default function Home({ navigation }: { navigation: CompositeNavigationProp<any, any> }) {
-  const { setIsLogin } = useContext(AuthContext);
+  const { setIsLogin, authData } = useContext(AuthContext);
 
   const dummyList = [
     {
@@ -72,7 +75,7 @@ export default function Home({ navigation }: { navigation: CompositeNavigationPr
           [
             {
               text: "Logout",
-              onPress: () => setIsLogin(false),
+              onPress: toggleLogout,
               style: "default",
             },
           ],
@@ -93,7 +96,7 @@ export default function Home({ navigation }: { navigation: CompositeNavigationPr
           [
             {
               text: "Logout",
-              onPress: () => setIsLogin(false),
+              onPress: toggleLogout,
               style: "default",
             },
           ],
@@ -110,12 +113,32 @@ export default function Home({ navigation }: { navigation: CompositeNavigationPr
     }, [])
   );
 
+  const toggleLogout = async() => {
+    showLoading(true);
+    try {
+      const promise = await axios({
+        method: 'post',
+        url: URL_LOGOUT,
+        timeout: 15000,
+        headers: {
+          'Authorization': `Bearer ${authData.token}`
+        }
+      });
+      
+    } catch (error) {
+      
+    }
+    showLoading(false);
+    setIsLogin(false);
+  }
+
   return (
     <AppView
       withSafeArea
     >
     <HomeHeader
-      title="Warung Bang Messi"
+      avatar={authData.user.avatar}
+      title={authData.user.name}
     />
       <ScrollView>
         <View style={styles.container}>

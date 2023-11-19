@@ -51,6 +51,7 @@ function RootNavigation({ mode, setMode }: RootNavigationProps) {
       role: '',
       avatar: '',
       avatar_url: '',
+      shop_name: '',
     },
   });
   const [isLogin, setIsLogin] = useState(false);
