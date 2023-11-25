@@ -10,6 +10,10 @@ import Modal from "react-native-modal";
 import AppSearchBar from '~/app/core/component/AppSearchBar';
 import ProductScreen from '../config/Screens';
 import axios from 'axios';
+import { URL_PRODUCT } from '~/app/service/ApiServices';
+import { AuthContext } from '~/app/core/config/AuthContext';
+// showLoading as showFullLoading
+import { showLoading as FullLoading } from '~/app/core/utils/loader';
 
 const screenWidth = Dimensions.get('window').width;
 type ProductStateType = {
@@ -21,6 +25,8 @@ type ProductStateType = {
 };
 
 export default function Product({ navigation }: { navigation: CompositeNavigationProp<any, any> }) {
+
+  const { authData } = useContext(AuthContext);
 
   const [showOption, setShowOption] = useState(false);
   const bg = useColorModeValue("light.200", "coolGray.800");
@@ -45,41 +51,80 @@ export default function Product({ navigation }: { navigation: CompositeNavigatio
     setShowOption(true);
   }
 
-  const removeSelected = (id: number) => {
-    setAllProduct(allProduct.filter((item) => item.id !== id));
-    setShowOption(false);
-    toast.show({
-      title: "Product deleted",
-      placement: "bottom",
-      duration: 3000,
-    })
+  const removeSelected = async(id: number) => {
+
+    FullLoading(true);
+
+    try {
+      const res = await axios({
+        method: 'DELETE',
+        url: URL_PRODUCT + '/' + id,
+        headers: {
+          'Authorization': `Bearer ${authData.token}`
+        },
+      });
+
+      getData();
+      toast.show({
+        title: "Product deleted",
+        placement: "bottom",
+        duration: 3000,
+      })
+      
+    } catch (e:any) {
+      toast.show({
+        title: "Error",
+        placement: "bottom",
+        duration: 3000,
+      });
+
+    } finally {
+      setShowOption(false);
+      FullLoading(false);
+    }
+
   }
 
   const filterProduct = (arr: any[], findText: string) => {
     return arr.filter((item) => item.name.toLowerCase().includes(findText.toLowerCase()));
   }
 
-  useEffect(() => {
-    getData();
-  },[]);
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, [])
+  );
 
   const getData = async () => {
     setShowLoading(true);
     try {
-      const response = await axios({
+      console.log('request');
+
+      const promise = await axios({
         method: 'get',
-        url: `https://fakestoreapi.com/products?limit=50`,
+        url: URL_PRODUCT,
         timeout: 15000,
+        headers: {
+          'Authorization': `Bearer ${authData.token}`,
+        },
+        params: {
+          keyword: search,
+        },
       });
 
-      const data = response.data.map((item: any) => {
-        return { ...item, stock: Math.floor(Math.random() * 10000), name: item.title, price: item.price*1000 };
-      });
+      console.log('done');
+      console.log(promise.data);
+      
+      const data = promise.data.data;
 
       setAllProduct(data);
       
-    } catch (error) {
+    } catch (error:any) {
       
+      console.log({
+        keyword: '',
+      });
+      console.log(error.response.data);
     }
     setShowLoading(false);
   }
@@ -87,7 +132,12 @@ export default function Product({ navigation }: { navigation: CompositeNavigatio
   return (
     <AppView
       withHeader
-      title='Product'
+      title='Products'
+      suffixHeader={
+        <TouchableOpacity onPress={() => ProductScreen.ADD_PRODUCT.navigate(navigation)}>
+          <Entypo name="plus" size={24} color={iconColor} />
+        </TouchableOpacity>
+      }
     >
       <AppSearchBar onSearch={(value) => setSearch(value)} defaultValue={search} />
       <View style={styles.container}>
@@ -98,7 +148,9 @@ export default function Product({ navigation }: { navigation: CompositeNavigatio
             </View>
           )
         }
-        <ScrollView>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+        >
           { 
             !showLoading && (( filterProduct(allProduct, search).length >= 0 ) ?
             filterProduct(allProduct, search).map((item, index) => (

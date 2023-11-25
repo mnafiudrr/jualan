@@ -6,6 +6,8 @@ import { Button, FormControl, Image, Input, Text, View, WarningOutlineIcon, useC
 import { Entypo } from '@expo/vector-icons';
 import ProductScreen from '../config/Screens';
 import axios from 'axios';
+import { URL_PRODUCT } from '~/app/service/ApiServices';
+import { AuthContext } from '~/app/core/config/AuthContext';
 
 type RouteProps = {
   route?: any
@@ -13,6 +15,7 @@ type RouteProps = {
 
 export default function DetailProduct({ route }: RouteProps) {
   const { data, config } = route.params;
+  const { authData } = useContext(AuthContext);
   const navigation = useNavigation<CompositeNavigationProp<any, any>>();
   
   const [product, setProduct] = useState({name: '', image: '', price: 0, stock: 0});
@@ -25,11 +28,17 @@ export default function DetailProduct({ route }: RouteProps) {
     try {
       const res = await axios({
         method: 'GET',
-        url: `https://fakestoreapi.com/products/${data.id}`,
+        headers: {
+          'Authorization': `Bearer ${authData.token}`
+        },
+        url: URL_PRODUCT + '/' + data.id,
       })
-      setProduct({...res.data, name: res.data.title, stock: Math.floor(Math.random() * 1000)});
+      
+      setProduct(res.data.data);
       
     } catch (e) {
+      console.log(e);
+      
     }
   }
 

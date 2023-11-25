@@ -7,3 +7,5 @@ export const URL_LOGIN = `${IP_SERVER}/auth/login`;
 export const URL_CHECK_TOKEN = `${IP_SERVER}/auth/check-token`;
 export const URL_LOGOUT = `${IP_SERVER}/auth/logout`;
 export const URL_FORGOT_PASSWORD = `${IP_SERVER}/auth/forgot-password`;
+
+export const URL_PRODUCT = `${IP_SERVER}/product`;

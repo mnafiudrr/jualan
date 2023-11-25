@@ -29,9 +29,9 @@ export default function PageHeader({
       }}
       >
         <View w={'5'}>        
-          <AntDesign onPress={backButton || navigation.goBack} name="arrowleft" color={iconColor??iconDefaultColor} size={24} style={{ marginTop: 10 }} />
+          <AntDesign onPress={backButton || navigation.goBack} name="arrowleft" color={iconDefaultColor} size={24} style={{ marginTop: 10 }} />
         </View>
-        <View style={{ flex: 1, alignItems: 'center', }} >
+        <View style={{ flex: 1, alignItems: 'center' }} >
           <Text
             textAlign={'center'}
             fontWeight={'600'}
@@ -43,9 +43,13 @@ export default function PageHeader({
             {title}
           </Text>
         </View>
-        {suffix ? null : <View w={'7'} />}
+        {suffix ? (
+          <View w={'7'} alignItems={'flex-end'} marginBottom={-2}>
+            {suffix}
+          </View>
+        ) : <View w={'7'} />}
       </View>
-      {suffix}
+      {/* {suffix} */}
     </ToggleableSafeArea>
   );
 }
@@ -54,7 +58,6 @@ PageHeader.defaultProps = {
   title: '',
   style: {},
   textStyle: {},
-  iconColor: AppColors.white,
   withSafeArea: false,
   suffix: null,
 };

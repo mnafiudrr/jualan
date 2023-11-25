@@ -118,6 +118,12 @@ export default function Login({ navigation }: { navigation: CompositeNavigationP
               style={{ marginBottom: 1 }}
               ref={usernameRef}
               returnKeyType="next"
+              variant='underlined'
+              h={'10'}
+              w={'100%'}
+              maxW={'xs'}
+              marginBottom={1}
+              size={'sm'}
               onSubmitEditing={() => passwordRef.current?.onFocus()}
             />
             <InputForm
@@ -128,6 +134,12 @@ export default function Login({ navigation }: { navigation: CompositeNavigationP
               ref={passwordRef}
               returnKeyType="done"
               onSubmitEditing={toggleLogin}
+              variant='underlined'
+              h={'10'}
+              w={'100%'}
+              maxW={'xs'}
+              marginBottom={1}
+              size={'sm'}
               InputRightElement={<Pressable onPress={() => setShow(!show)}>
                 <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={5} mr="2" color="muted.400" />
               </Pressable>}

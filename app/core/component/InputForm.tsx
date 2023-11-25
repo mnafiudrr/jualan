@@ -37,34 +37,16 @@ const InputForm = React.forwardRef<inputHandle, InputFormProps>(({
     onFocus: () => textInputRef.current?.focus(),
   }));
 
-//   return (
-//     <View style={[styles.container, style]}>
-//       <View style={styles.inputContainer}>
-//         <TextInput 
-//           style={{color: AppColors.fullblack}}
-//           editable={!readonly}
-//           ref={textInputRef}
-//           secureTextEntry={secureTextEntry}
-//           returnKeyType={returnKeyType}
-//           keyboardType={keyboardType}
-//           placeholder={placeholder} 
-//           value={value} 
-//           onSubmitEditing={onSubmitEditing}
-//           onChangeText={onChangeText}/>
-//       </View>
-//     </View>
-//   );
-
   return (
     <Input 
-      variant={props.variant??'underlined'}
-      h={props.h??10}
-      w={props.w??'100%'}
-      maxW={props.maxW??'xs'}
-      marginBottom={props.marginBottom??1}
-      mr={props.mr??0}
-      ml={props.ml??0}
-      size={props.size??'sm'}
+      variant={props.variant}
+      h={props.h}
+      w={props.w}
+      maxW={props.maxW}
+      marginBottom={props.marginBottom}
+      mr={props.mr}
+      ml={props.ml}
+      size={props.size}
       onChangeText={onChangeText}
       onSubmitEditing={onSubmitEditing}
       secureTextEntry={secureTextEntry}

@@ -123,6 +123,12 @@ export default function Register({ navigation }: { navigation: CompositeNavigati
             onChangeText={(val) => setData({...data, username: val})}
             onSubmitEditing={() => fullnameRef.current?.onFocus()}
             returnKeyType='next'
+            variant='underlined'
+            h={'10'}
+            w={'100%'}
+            maxW={'xs'}
+            marginBottom={1}
+            size={'sm'}
           />
           <InputForm
             placeholder="Full Name"
@@ -130,6 +136,12 @@ export default function Register({ navigation }: { navigation: CompositeNavigati
             ref={fullnameRef}
             onSubmitEditing={() => emailRef.current?.onFocus()}
             returnKeyType='next'
+            variant='underlined'
+            h={'10'}
+            w={'100%'}
+            maxW={'xs'}
+            marginBottom={1}
+            size={'sm'}
           />
           <InputForm
             placeholder="Email"
@@ -138,6 +150,12 @@ export default function Register({ navigation }: { navigation: CompositeNavigati
             ref={emailRef}
             returnKeyType='next'
             keyboardType='email-address'
+            variant='underlined'
+            h={'10'}
+            w={'100%'}
+            maxW={'xs'}
+            marginBottom={1}
+            size={'sm'}
           />
           <InputForm
             placeholder="Shop Name"
@@ -145,6 +163,12 @@ export default function Register({ navigation }: { navigation: CompositeNavigati
             onSubmitEditing={() => passwordRef.current?.onFocus()}
             ref={shopNameRef}
             returnKeyType='next'
+            variant='underlined'
+            h={'10'}
+            w={'100%'}
+            maxW={'xs'}
+            marginBottom={1}
+            size={'sm'}
           />
           <InputForm
             placeholder="Password"
@@ -158,6 +182,12 @@ export default function Register({ navigation }: { navigation: CompositeNavigati
                 <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={5} mr="2" color="muted.400" />
               </Pressable>
             }
+            variant='underlined'
+            h={'10'}
+            w={'100%'}
+            maxW={'xs'}
+            marginBottom={1}
+            size={'sm'}
 
           />
           <InputForm
@@ -172,6 +202,12 @@ export default function Register({ navigation }: { navigation: CompositeNavigati
               </Pressable>
             }
             onSubmitEditing={toggleRegister}
+            variant='underlined'
+            h={'10'}
+            w={'100%'}
+            maxW={'xs'}
+            marginBottom={1}
+            size={'sm'}
           />
           <Button h="10" w="100%" maxW="xs" marginTop="15" onPress={toggleRegister}>
             Register
